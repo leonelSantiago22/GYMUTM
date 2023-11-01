@@ -1,13 +1,9 @@
-FROM node:16
+FROM node:16 as builder
 
-WORKDIR /app
+COPY . /repositories
 
-COPY package*.json .
+WORKDIR /repositories/gymutm/
 
-RUN npm i 
+FROM nginx:stable-alpine as gymutm
 
-COPY . .
-
-EXPOSE 5173
-
-CMD ["npm", "run", "dev", "--", "--host"]
+COPY --from=builder /repositories/gymutm/dist /usr/share/nginx/html
